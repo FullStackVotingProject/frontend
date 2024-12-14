@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+  --background-start: #f8fafc;
+  --background-end: #e2e8f0;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bg-voting-pattern {
+  background-color: var(--background-start);
+  background-image: 
+    radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.1) 0, transparent 40%),
+    radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.15) 0, transparent 40%),
+    linear-gradient(45deg, transparent 0%, rgba(37, 99, 235, 0.03) 50%, transparent 100%),
+    repeating-linear-gradient(45deg, rgba(37, 99, 235, 0.02) 0, rgba(37, 99, 235, 0.02) 1px, transparent 1px, transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(37, 99, 235, 0.02) 0, rgba(37, 99, 235, 0.02) 1px, transparent 1px, transparent 10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-voting-pattern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 3L28 28H2L15 3Z' stroke='rgba(37, 99, 235, 0.05)' fill='none'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.background-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.content-container {
+  position: relative;
+  z-index: 1;
+}
+
+.input-field {
+  @apply appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+  focus:outline-none focus:ring-primary-500 focus:border-primary-500;
+}
+
+.btn-primary {
+  @apply w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
+  bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 
+  disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.floating-checkmark {
+  position: absolute;
+  opacity: 0.1;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.checkmark-1 {
+  top: 10%;
+  left: 5%;
+  font-size: 2rem;
+}
+
+.checkmark-2 {
+  top: 30%;
+  right: 8%;
+  font-size: 3rem;
+  animation-delay: -2s;
+}
+
+.checkmark-3 {
+  bottom: 15%;
+  left: 15%;
+  font-size: 2.5rem;
+  animation-delay: -4s;
+}
+
+@layer components {
+  .form-error {
+    @apply text-red-500 text-sm mt-1;
+  }
+}
