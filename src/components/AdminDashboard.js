@@ -1,5 +1,6 @@
 import React from 'react';
 import LogoutButton from './LogoutButton';
+import PollManagement from './admin/PollManagement';
 
 const AdminDashboard = () => {
     return (
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
             <div className="py-10">
                 <main>
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        {/* Add your admin dashboard content here */}
+                        <PollManagement />
                     </div>
                 </main>
             </div>
