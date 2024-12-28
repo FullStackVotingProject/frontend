@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LogoutButton from '../LogoutButton';
 import ActivePolls from './ActivePolls';
 import PollResults from './PollResults';
+import Profile from './Profile';
 import socketService from '../../services/socketService';
 
 const UserDashboard = () => {
@@ -59,13 +60,25 @@ const UserDashboard = () => {
                             >
                                 Poll Results
                             </button>
+                            <button
+                                onClick={() => setActiveTab('profile')}
+                                className={`${
+                                    activeTab === 'profile'
+                                        ? 'border-blue-500 text-blue-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                            >
+                                Profile Settings
+                            </button>
                         </nav>
                     </div>
 
-                    {/* Tab Content */}
-                    <main>
-                        {activeTab === 'active' ? <ActivePolls /> : <PollResults />}
-                    </main>
+                    {/* Content */}
+                    <div>
+                        {activeTab === 'active' && <ActivePolls />}
+                        {activeTab === 'results' && <PollResults />}
+                        {activeTab === 'profile' && <Profile />}
+                    </div>
                 </div>
             </div>
         </div>

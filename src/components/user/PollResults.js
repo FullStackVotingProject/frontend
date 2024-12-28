@@ -95,7 +95,7 @@ const PollResults = () => {
                         {pollResults.questions.map((question, index) => (
                             <div key={question.id} className="border-t pt-6 first:border-t-0 first:pt-0">
                                 <h4 className="text-lg font-medium text-gray-900 mb-4">
-                                    {index + 1}. {question.text}
+                                    {index + 1}. {question.question_text}
                                 </h4>
                                 <div className="space-y-4">
                                     {question.options.map(option => (

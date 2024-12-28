@@ -59,23 +59,43 @@ const VoteModal = ({ isOpen, onClose, poll, onSubmit }) => {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                                <Dialog.Title as="h3" className="text-2xl font-bold leading-6 text-gray-900 mb-4">
-                                    {poll.title}
-                                </Dialog.Title>
+                            <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-8 text-left align-middle shadow-xl transition-all">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div>
+                                        <Dialog.Title as="h3" className="text-2xl font-bold leading-6 text-gray-900">
+                                            {poll.title}
+                                        </Dialog.Title>
+                                        <p className="text-gray-600 mt-2">{poll.description}</p>
+                                    </div>
+                                    <button
+                                        onClick={onClose}
+                                        className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                                    >
+                                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
 
-                                <div className="mt-2">
-                                    <p className="text-gray-600 mb-6">{poll.description}</p>
-
-                                    <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="mt-4">
+                                    <form onSubmit={handleSubmit} className="space-y-8">
                                         {poll.questions.map((question, qIndex) => (
-                                            <div key={question.id} className="space-y-4">
-                                                <h4 className="text-lg font-medium text-gray-900">
-                                                    {qIndex + 1}. {question.text}
+                                            <div key={question.id} className="bg-gray-50 rounded-lg p-6 space-y-4">
+                                                <h4 className="text-lg font-semibold text-gray-900 flex items-center">
+                                                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">
+                                                        {qIndex + 1}
+                                                    </span>
+                                                    {question.question_text}
                                                 </h4>
-                                                <div className="space-y-2">
+                                                <div className="space-y-3 ml-11">
                                                     {question.options.map((option) => (
-                                                        <div key={option.id} className="flex items-center">
+                                                        <label
+                                                            key={option.id}
+                                                            className={`flex items-center p-3 rounded-lg transition-all cursor-pointer
+                                                                ${selectedOptions[question.id] === option.id 
+                                                                    ? 'bg-blue-50 border-2 border-blue-200' 
+                                                                    : 'hover:bg-gray-100 border-2 border-transparent'}`}
+                                                        >
                                                             <input
                                                                 type="radio"
                                                                 id={`option-${option.id}`}
@@ -85,29 +105,26 @@ const VoteModal = ({ isOpen, onClose, poll, onSubmit }) => {
                                                                 onChange={() => handleOptionSelect(question.id, option.id)}
                                                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                                             />
-                                                            <label
-                                                                htmlFor={`option-${option.id}`}
-                                                                className="ml-3 block text-gray-700"
-                                                            >
+                                                            <span className="ml-3 text-gray-700">
                                                                 {option.option_text}
-                                                            </label>
-                                                        </div>
+                                                            </span>
+                                                        </label>
                                                     ))}
                                                 </div>
                                             </div>
                                         ))}
-
-                                        <div className="mt-6 flex justify-end space-x-3">
+                                        
+                                        <div className="flex justify-end space-x-4 mt-8 pt-4 border-t">
                                             <button
                                                 type="button"
                                                 onClick={onClose}
-                                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                                                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500"
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                                className="inline-flex justify-center px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                             >
                                                 Submit Vote
                                             </button>
