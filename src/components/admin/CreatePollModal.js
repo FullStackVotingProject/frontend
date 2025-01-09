@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
@@ -11,7 +6,11 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
         title: '',
         description: '',
         questions: [{ text: '', options: [{ text: '', image: null }, { text: '', image: null }] }],
-        durationMinutes: 60
+        duration: {
+            days: 0,
+            hours: 0,
+            minutes: 0
+        }
     });
 
     const handleQuestionChange = (index, value) => {
@@ -58,12 +57,26 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onCreate(pollData);
+        // Convert duration to minutes before sending
+        const totalMinutes = 
+            (pollData.duration.days * 24 * 60) + 
+            (pollData.duration.hours * 60) + 
+            pollData.duration.minutes;
+            
+        const submissionData = {
+            ...pollData,
+            durationMinutes: totalMinutes
+        };
+        onCreate(submissionData);
         setPollData({
             title: '',
             description: '',
             questions: [{ text: '', options: [{ text: '', image: null }, { text: '', image: null }] }],
-            durationMinutes: 60
+            duration: {
+                days: 0,
+                hours: 0,
+                minutes: 0
+            }
         });
         onClose();
     };
@@ -122,15 +135,59 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Duration (minutes)</label>
-                                        <input
-                                            type="number"
-                                            value={pollData.durationMinutes}
-                                            onChange={(e) => setPollData({ ...pollData, durationMinutes: parseInt(e.target.value) })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                            min="1"
-                                            required
-                                        />
+                                        <label className="block text-sm font-medium text-gray-700">Duration</label>
+                                        <div className="mt-1 flex space-x-4">
+                                            <div>
+                                                <label className="block text-xs text-gray-900">Days</label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    value={pollData.duration.days}
+                                                    onChange={(e) => setPollData({
+                                                        ...pollData,
+                                                        duration: {
+                                                            ...pollData.duration,
+                                                            days: parseInt(e.target.value) || 0
+                                                        }
+                                                    })}
+                                                    className="block w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs text-gray-900">Hours</label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="23"
+                                                    value={pollData.duration.hours}
+                                                    onChange={(e) => setPollData({
+                                                        ...pollData,
+                                                        duration: {
+                                                            ...pollData.duration,
+                                                            hours: parseInt(e.target.value) || 0
+                                                        }
+                                                    })}
+                                                    className="block w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs text-gray-500">Minutes</label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="59"
+                                                    value={pollData.duration.minutes}
+                                                    onChange={(e) => setPollData({
+                                                        ...pollData,
+                                                        duration: {
+                                                            ...pollData.duration,
+                                                            minutes: parseInt(e.target.value) || 0
+                                                        }
+                                                    })}
+                                                    className="block w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className="space-y-4">
@@ -169,7 +226,7 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
                                                                 placeholder={`Option ${oIndex + 1}`}
                                                                 required
                                                             />
-                                                            <input
+                                                            {/* <input
                                                                 type="file"
                                                                 accept="image/*"
                                                                 onChange={(e) => handleImageChange(qIndex, oIndex, e.target.files[0])}
@@ -181,7 +238,7 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
                                                                     alt={`Option ${oIndex + 1}`}
                                                                     className="w-12 h-12 object-cover ml-2 border rounded"
                                                                 />
-                                                            )}
+                                                            )} */}
                                                             {question.options.length > 2 && (
                                                                 <button
                                                                     type="button"
