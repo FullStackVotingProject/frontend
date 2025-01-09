@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient">
+            <stop stop-color="#4F46E5" offset="0%"/>
+            <stop stop-color="#7C3AED" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="0" y="0" width="800" height="600"/>
+        <g transform="translate(100, 100)">
+            <!-- Ballot Box -->
+            <rect fill="url(#linearGradient)" x="200" y="200" width="200" height="150" rx="20"/>
+            <path d="M250,180 L350,180 L350,200 L250,200 Z" fill="#4F46E5"/>
+            
+            <!-- Ballot Paper -->
+            <g transform="translate(280, 150)">
+                <rect fill="#FFFFFF" x="0" y="0" width="80" height="100" rx="5"/>
+                <line x1="10" y1="20" x2="70" y2="20" stroke="#E2E8F0" stroke-width="2"/>
+                <line x1="10" y1="40" x2="70" y2="40" stroke="#E2E8F0" stroke-width="2"/>
+                <line x1="10" y1="60" x2="70" y2="60" stroke="#E2E8F0" stroke-width="2"/>
+                <circle cx="20" cy="80" r="5" fill="#4F46E5"/>
+            </g>
+            
+            <!-- Checkmark -->
+            <g transform="translate(400, 250)">
+                <circle cx="25" cy="25" r="25" fill="#22C55E" fill-opacity="0.2"/>
+                <path d="M15,25 L22,32 L35,18" stroke="#22C55E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+        </g>
+    </g>
+</svg>

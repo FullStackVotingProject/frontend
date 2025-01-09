@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
@@ -5,7 +10,7 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
     const [pollData, setPollData] = useState({
         title: '',
         description: '',
-        questions: [{ text: '', options: ['', ''] }],
+        questions: [{ text: '', options: [{ text: '', image: null }, { text: '', image: null }] }],
         durationMinutes: 60
     });
 
@@ -17,20 +22,26 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
 
     const handleOptionChange = (questionIndex, optionIndex, value) => {
         const newQuestions = [...pollData.questions];
-        newQuestions[questionIndex].options[optionIndex] = value;
+        newQuestions[questionIndex].options[optionIndex].text = value;
+        setPollData({ ...pollData, questions: newQuestions });
+    };
+
+    const handleImageChange = (questionIndex, optionIndex, file) => {
+        const newQuestions = [...pollData.questions];
+        newQuestions[questionIndex].options[optionIndex].image = URL.createObjectURL(file);
         setPollData({ ...pollData, questions: newQuestions });
     };
 
     const addQuestion = () => {
         setPollData({
             ...pollData,
-            questions: [...pollData.questions, { text: '', options: ['', ''] }]
+            questions: [...pollData.questions, { text: '', options: [{ text: '', image: null }, { text: '', image: null }] }]
         });
     };
 
     const addOption = (questionIndex) => {
         const newQuestions = [...pollData.questions];
-        newQuestions[questionIndex].options.push('');
+        newQuestions[questionIndex].options.push({ text: '', image: null });
         setPollData({ ...pollData, questions: newQuestions });
     };
 
@@ -51,7 +62,7 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
         setPollData({
             title: '',
             description: '',
-            questions: [{ text: '', options: ['', ''] }],
+            questions: [{ text: '', options: [{ text: '', image: null }, { text: '', image: null }] }],
             durationMinutes: 60
         });
         onClose();
@@ -152,12 +163,25 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
                                                         <div key={oIndex} className="flex items-center gap-2">
                                                             <input
                                                                 type="text"
-                                                                value={option}
+                                                                value={option.text}
                                                                 onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
                                                                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                                                 placeholder={`Option ${oIndex + 1}`}
                                                                 required
                                                             />
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={(e) => handleImageChange(qIndex, oIndex, e.target.files[0])}
+                                                                className="block w-1/4 text-sm"
+                                                            />
+                                                            {option.image && (
+                                                                <img
+                                                                    src={option.image}
+                                                                    alt={`Option ${oIndex + 1}`}
+                                                                    className="w-12 h-12 object-cover ml-2 border rounded"
+                                                                />
+                                                            )}
                                                             {question.options.length > 2 && (
                                                                 <button
                                                                     type="button"

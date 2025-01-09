@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import LogoutButton from '../LogoutButton';
 import ActivePolls from './ActivePolls';
@@ -25,7 +27,12 @@ const UserDashboard = () => {
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="flex-shrink-0 flex items-center">
-                                <h1 className="text-2xl font-bold text-gray-900">Vote Platform</h1>
+                                <img
+                                    src="vote.png"
+                                    alt="Clickvote Logo"
+                                    className="h-10 w-10 mr-3"
+                                />
+                                <h1 className="text-2xl font-bold text-gray-900">Clickvote</h1>
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -86,3 +93,4 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
+

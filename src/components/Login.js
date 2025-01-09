@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -93,29 +96,20 @@ const Login = () => {
             transition={{ duration: 0.5 }}
             className="min-h-screen bg-voting-pattern flex flex-col justify-center py-12 sm:px-6 lg:px-8"
         >
-            <div className="background-container">
-                <span className="floating-checkmark checkmark-1">✓</span>
-                <span className="floating-checkmark checkmark-2">✓</span>
-                <span className="floating-checkmark checkmark-3">✓</span>
+            {/* Logo */}
+            <div className="flex justify-center items-center mb-8 space-x-4">
+                <img 
+                    src="vote.png" 
+                    alt="Clickvote Logo" 
+                    className="h-16 w-auto"
+                />
+                <h1 className="text-3xl font-extrabold text-gray-900">
+                    Clickvote
+                </h1>
             </div>
-            <div className="content-container">
-                <motion.div 
-                    initial={{ y: -50 }}
-                    animate={{ y: 0 }}
-                    transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
-                    className="sm:mx-auto sm:w-full sm:max-w-md"
-                >
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Connexion
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Ou{' '}
-                        <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
-                            créez un compte
-                        </Link>
-                    </p>
-                </motion.div>
 
+            <div className="content-container">
+                {/* Formulaire */}
                 <motion.div 
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -151,6 +145,7 @@ const Login = () => {
                                     </div>
                                 </div>
                             )}
+                            {/* Champs Email et Mot de passe */}
                             <motion.div
                                 initial={{ x: -20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
@@ -214,9 +209,31 @@ const Login = () => {
                         </form>
                     </div>
                 </motion.div>
+
+                {/* Phrase d'inscription */}
+                <motion.div 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
+                    className="sm:mx-auto sm:w-full sm:max-w-md mt-8 text-center"
+                >
+                    <p className="text-sm text-gray-600">
+                        Si vous n'avez pas de compte, 
+                        <Link to="/register" className="text-blue-600 hover:text-blue-800">
+                            Créez un compte
+                        </Link>
+                    </p>
+                </motion.div>
             </div>
         </motion.div>
     );
 };
 
 export default Login;
+
+
+
+
+
+
+

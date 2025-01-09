@@ -1,3 +1,4 @@
+
 import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
@@ -32,6 +33,11 @@ const VoteModal = ({ isOpen, onClose, poll, onSubmit }) => {
 
         onSubmit(poll.id, votes);
     };
+
+    // Vérification si les questions existent
+    if (!poll || !poll.questions || poll.questions.length === 0) {
+        return <div>Loading...</div>; // Si pas de données, affiche "Loading"
+    }
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -105,15 +111,21 @@ const VoteModal = ({ isOpen, onClose, poll, onSubmit }) => {
                                                                 onChange={() => handleOptionSelect(question.id, option.id)}
                                                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                                             />
-                                                            <span className="ml-3 text-gray-700">
-                                                                {option.option_text}
-                                                            </span>
+                                                            <span className="ml-3 text-gray-700">{option.option_text}</span>
+
+                                                            {option.image && (
+                                                                <img
+                                                                    src={option.image}
+                                                                    alt={`Option ${option.id}`}
+                                                                    className="w-10 h-10 object-cover rounded ml-4"
+                                                                />
+                                                            )}
                                                         </label>
                                                     ))}
                                                 </div>
                                             </div>
                                         ))}
-                                        
+
                                         <div className="flex justify-end space-x-4 mt-8 pt-4 border-t">
                                             <button
                                                 type="button"
@@ -141,3 +153,5 @@ const VoteModal = ({ isOpen, onClose, poll, onSubmit }) => {
 };
 
 export default VoteModal;
+
+

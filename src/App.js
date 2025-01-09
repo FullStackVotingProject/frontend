@@ -9,6 +9,7 @@ import Register from './components/Register';
 import EmailVerification from './components/EmailVerification';
 import AdminDashboard from './components/AdminDashboard';
 import UserDashboard from './components/user/UserDashboard';
+import Home from './components/Home';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -52,17 +53,10 @@ function App() {
           pauseOnHover
         />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/verify-email/:token" element={<EmailVerification />} />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <UserDashboard />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/verify-email" element={<EmailVerification />} />
           <Route
             path="/admin"
             element={
@@ -71,7 +65,14 @@ function App() {
               </AdminRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <UserDashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>
