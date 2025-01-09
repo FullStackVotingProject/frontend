@@ -1,24 +1,43 @@
-
-
 import React, { useState, useEffect } from 'react';
 import LogoutButton from '../LogoutButton';
 import ActivePolls from './ActivePolls';
 import PollResults from './PollResults';
 import Profile from './Profile';
 import socketService from '../../services/socketService';
+import CreatePollModal from '../admin/CreatePollModal';
+import axios from 'axios';
+import { toast } from 'react-toastify'; // Import toast from react-toastify
 
 const UserDashboard = () => {
     const [activeTab, setActiveTab] = useState('active');
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     useEffect(() => {
-        // Initialiser la connexion socket
         const socket = socketService.connect();
-
-        // Cleanup lors du démontage du composant
         return () => {
             socketService.disconnect();
         };
     }, []);
+
+    const handleCreatePoll = async (pollData) => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/polls', pollData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            if (response.data) {
+                setIsCreateModalOpen(false);
+                window.dispatchEvent(new CustomEvent('newPoll'));
+                toast.success('Poll created successfully!');
+            }
+        } catch (error) {
+            console.error('Error creating poll:', error);
+            toast.error(error.response?.data?.message || 'Failed to create poll. Please try again.');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -35,7 +54,13 @@ const UserDashboard = () => {
                                 <h1 className="text-2xl font-bold text-gray-900">Clickvote</h1>
                             </div>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center space-x-4">
+                            <button
+                                onClick={() => setIsCreateModalOpen(true)}
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
+                                Create Poll
+                            </button>
                             <LogoutButton className="ml-4" />
                         </div>
                     </div>
@@ -88,9 +113,13 @@ const UserDashboard = () => {
                     </div>
                 </div>
             </div>
+            <CreatePollModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onCreate={handleCreatePoll}
+            />
         </div>
     );
 };
 
 export default UserDashboard;
-

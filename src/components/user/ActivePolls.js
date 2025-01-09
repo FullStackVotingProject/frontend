@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import VoteModal from './VoteModal';
 import CountdownTimer from './CountdownTimer';
@@ -12,40 +12,8 @@ const ActivePolls = () => {
     const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
     const [filterStatus, setFilterStatus] = useState('active');
 
-    useEffect(() => {
-        // Connecter au service WebSocket
-        socketService.connect();
-
-        // Écouter les événements de fin de sondage
-        const handlePollEnded = (event) => {
-            const { pollId } = event.detail;
-            // Mettre à jour la liste des sondages
-            setPolls(currentPolls => 
-                currentPolls.map(poll => 
-                    poll.id === pollId 
-                        ? { ...poll, status: 'ended' }
-                        : poll
-                )
-            );
-        };
-
-        window.addEventListener('pollEnded', handlePollEnded);
-
-        // Charger les sondages
-        fetchPolls();
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('pollEnded', handlePollEnded);
-            socketService.disconnect();
-        };
-    }, []);
-
-    useEffect(() => {
-        filterPolls(filterStatus);
-    }, [polls, filterStatus]);
-
-    const fetchPolls = async () => {
+    // Fetch polls with useCallback to prevent unnecessary re-renders
+    const fetchPolls = useCallback(async () => {
         try {
             const response = await fetch('http://localhost:5000/api/polls', {
                 headers: {
@@ -61,7 +29,46 @@ const ActivePolls = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [filterStatus]);
+
+    useEffect(() => {
+        // Connect to WebSocket service
+        socketService.connect();
+
+        // Listen for poll ended events
+        const handlePollEnded = (event) => {
+            const { pollId } = event.detail;
+            setPolls(currentPolls => 
+                currentPolls.map(poll => 
+                    poll.id === pollId 
+                        ? { ...poll, status: 'ended' }
+                        : poll
+                )
+            );
+        };
+
+        // Listen for new poll events
+        const handleNewPoll = () => {
+            fetchPolls();
+        };
+
+        window.addEventListener('pollEnded', handlePollEnded);
+        window.addEventListener('newPoll', handleNewPoll);
+
+        // Load polls
+        fetchPolls();
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('pollEnded', handlePollEnded);
+            window.removeEventListener('newPoll', handleNewPoll);
+            socketService.disconnect();
+        };
+    }, [fetchPolls]);
+
+    useEffect(() => {
+        filterPolls(filterStatus);
+    }, [polls, filterStatus]);
 
     const filterPolls = (status) => {
         if (status === 'all') {
@@ -185,9 +192,9 @@ const ActivePolls = () => {
                                         {poll.status === 'active' ? 'Active' : 'Ended'}
                                     </span>
                                 </div>
-                                
+                                 
                                 <p className="text-gray-600 mb-6">{poll.description}</p>
-                                
+                                 
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between text-sm">
                                         <div className="flex items-center space-x-2 text-gray-500">

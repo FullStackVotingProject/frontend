@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { toast } from 'react-toastify'; 
 
 const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
     const [pollData, setPollData] = useState({
@@ -57,17 +58,38 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Validate questions and options
+        if (!pollData.questions.every(q => q.text && q.options.length >= 2 && q.options.every(o => o.text))) {
+            toast.error('Please fill in all questions and provide at least 2 options for each question');
+            return;
+        }
+
         // Convert duration to minutes before sending
         const totalMinutes = 
-            (pollData.duration.days * 24 * 60) + 
-            (pollData.duration.hours * 60) + 
-            pollData.duration.minutes;
+            (parseInt(pollData.duration.days) * 24 * 60) + 
+            (parseInt(pollData.duration.hours) * 60) + 
+            parseInt(pollData.duration.minutes);
             
+        if (totalMinutes <= 0) {
+            toast.error('Duration must be greater than 0');
+            return;
+        }
+
+        // Clean up the data before sending
         const submissionData = {
-            ...pollData,
+            title: pollData.title,
+            description: pollData.description,
+            questions: pollData.questions.map(q => ({
+                text: q.text,
+                options: q.options.map(o => o.text) // Send only the text, not the entire option object
+            })),
             durationMinutes: totalMinutes
         };
+
         onCreate(submissionData);
+        
+        // Reset form
         setPollData({
             title: '',
             description: '',
