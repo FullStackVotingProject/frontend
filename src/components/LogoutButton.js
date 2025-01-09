@@ -1,13 +1,22 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/api';
+import { toast } from 'react-toastify';
 
 const LogoutButton = ({ className }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        // Clear any user data from localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        // Show success message
+        toast.success('Déconnexion réussie');
+        
+        // Redirect to homepage
+        navigate('/');
     };
 
     return (
