@@ -26,11 +26,11 @@ const CreatePollModal = ({ isOpen, onClose, onCreate }) => {
         setPollData({ ...pollData, questions: newQuestions });
     };
 
-    const handleImageChange = (questionIndex, optionIndex, file) => {
-        const newQuestions = [...pollData.questions];
-        newQuestions[questionIndex].options[optionIndex].image = URL.createObjectURL(file);
-        setPollData({ ...pollData, questions: newQuestions });
-    };
+    // const handleImageChange = (questionIndex, optionIndex, file) => {
+    //     const newQuestions = [...pollData.questions];
+    //     newQuestions[questionIndex].options[optionIndex].image = URL.createObjectURL(file);
+    //     setPollData({ ...pollData, questions: newQuestions });
+    // };
 
     const addQuestion = () => {
         setPollData({

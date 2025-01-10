@@ -34,8 +34,9 @@ const UserDashboard = () => {
                 toast.success('Poll created successfully!');
             }
         } catch (error) {
-            console.error('Error creating poll:', error);
-            toast.error(error.response?.data?.message || 'Failed to create poll. Please try again.');
+            window.location.reload();
+            // console.error('Error creating poll:', error);
+            // toast.error(error.response?.data?.message || 'Failed to create poll. Please try again.');
         }
     };
 

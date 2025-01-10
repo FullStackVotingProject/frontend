@@ -71,7 +71,8 @@ const PollManagement = () => {
             setIsCreateModalOpen(false);
             fetchPolls();
         } catch (error) {
-            toast.error('Error creating poll: ' + error.message);
+            window.location.reload();
+            // toast.error('Error creating poll: ' + error.message);
         }
     };
 
