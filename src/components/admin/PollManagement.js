@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import CreatePollModal from './CreatePollModal';
 import PollList from './PollList';
 import { toast } from 'react-toastify';
+import { fetchPolls } from '../../services/pollService';
+import { checkPollStatus } from '../../utils/dateUtils';
 
 const PollManagement = () => {
     const [polls, setPolls] = useState([]);
@@ -10,48 +12,34 @@ const PollManagement = () => {
     const [filter, setFilter] = useState('all');
 
     useEffect(() => {
-        fetchPolls();
-        // Set up an interval to check poll status
-        const interval = setInterval(checkPollStatus, 1000);
+        loadPolls();
+        const interval = setInterval(updatePollStatuses, 1000);
         return () => clearInterval(interval);
     }, []);
 
-    const checkPollStatus = () => {
-        const currentTime = new Date();
-        setPolls(currentPolls => 
-            currentPolls.map(poll => {
-                const endTime = new Date(poll.end_time);
-                return {
-                    ...poll,
-                    status: currentTime > endTime ? 'ended' : 'active'
-                };
-            })
-        );
-    };
-
-    const fetchPolls = async () => {
+    const loadPolls = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/polls', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            if (!response.ok) throw new Error('Failed to fetch polls');
-            const data = await response.json();
-            
-            // Check status for each poll immediately after fetching
-            const currentTime = new Date();
+            setIsLoading(true);
+            const data = await fetchPolls();
             const updatedPolls = data.map(poll => ({
                 ...poll,
-                status: currentTime > new Date(poll.end_time) ? 'ended' : 'active'
+                status: checkPollStatus(poll)
             }));
-            
             setPolls(updatedPolls);
         } catch (error) {
-            toast.error('Error fetching polls: ' + error.message);
+            console.error('Error loading polls:', error);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const updatePollStatuses = () => {
+        setPolls(currentPolls => 
+            currentPolls.map(poll => ({
+                ...poll,
+                status: checkPollStatus(poll)
+            }))
+        );
     };
 
     const handleCreatePoll = async (pollData) => {
@@ -69,7 +57,7 @@ const PollManagement = () => {
             
             toast.success('Poll created successfully!');
             setIsCreateModalOpen(false);
-            fetchPolls();
+            loadPolls();
             window.location.reload();
         } catch (error) {
             window.location.reload();
@@ -91,7 +79,7 @@ const PollManagement = () => {
             if (!response.ok) throw new Error('Failed to delete poll');
             
             toast.success('Poll deleted successfully!');
-            fetchPolls();
+            loadPolls();
         } catch (error) {
             toast.error('Error deleting poll: ' + error.message);
         }
